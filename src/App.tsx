@@ -20,6 +20,7 @@ import { Settings } from "./components/Settings";
 import { Profile } from "./components/Profile";
 import { ActivityLogs } from "./components/ActivityLogs";
 import { Shield, Sparkles, Key, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { BRAND_CONFIG } from "./brandConfig";
 
 const MainApp: React.FC = () => {
   const { currentUser, login, isLoading } = useApp();
@@ -63,8 +64,21 @@ const MainApp: React.FC = () => {
           
           {/* Logo & Branding Title */}
           <div className="text-center space-y-3">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg font-display font-black text-xl tracking-wider">
-              RF
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-white overflow-hidden flex items-center justify-center shadow-lg border border-slate-100 p-0.5">
+              <img 
+                src={`${import.meta.env.BASE_URL || "/"}favicon.png`} 
+                alt="Logo" 
+                className="w-full h-full object-contain rounded-xl" 
+                onError={(e) => {
+                  // Fallback to stylized logo text if image fails to load
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    parent.className = "w-14 h-14 mx-auto rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg font-display font-black text-xl tracking-wider";
+                    parent.innerText = "RF";
+                  }
+                }}
+              />
             </div>
             <div>
               <h1 className="text-2xl font-display font-black text-slate-900 tracking-tight">RentFlow Workspace</h1>
@@ -121,35 +135,6 @@ const MainApp: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-
-          {/* FAST DEMO ACCESS PREFILLS - INCREDIBLY HELPFUL FOR PREVIEW AND TESTING */}
-          <div className="border-t border-slate-100 pt-5 space-y-3.5">
-            <span className="font-bold text-[10px] font-mono text-slate-400 block uppercase tracking-wider text-center">Fast Demo Prefill Channels</span>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => handlePrefill("admin@rentflow.com", "admin123")}
-                className="p-3 bg-slate-50/50 hover:bg-primary-50 hover:border-primary-200 border border-slate-100 rounded-xl text-left transition-all cursor-pointer"
-              >
-                <span className="font-bold text-slate-800 text-[11px] block">Admin Console</span>
-                <span className="text-[9px] text-slate-400 font-mono mt-0.5 block">Full operational control</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handlePrefill("sales@rentflow.com", "sales123")}
-                className="p-3 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-200 border border-slate-100 rounded-xl text-left transition-all cursor-pointer"
-              >
-                <span className="font-bold text-slate-800 text-[11px] block">Sales Terminal</span>
-                <span className="text-[9px] text-slate-400 font-mono mt-0.5 block">Dispatches & returns only</span>
-              </button>
-            </div>
-          </div>
-
-          <p className="text-center text-[10px] text-slate-400 pt-1 leading-normal">
-            RentFlow Enterprise Suite. All transactions are logged chronologically under operational safety regulations.
-          </p>
         </div>
       </div>
     );
