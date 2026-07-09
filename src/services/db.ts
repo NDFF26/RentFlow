@@ -451,8 +451,16 @@ export const initializeFirestoreAndSeed = async () => {
     // 1. Settings
     const settingsRef = doc(db, "settings", "global");
     const settingsSnap = await getDoc(settingsRef);
+    let isFactoryReset = false;
     if (!settingsSnap.exists()) {
       await setDoc(settingsRef, DEFAULT_SETTINGS);
+    } else {
+      isFactoryReset = settingsSnap.data()?.isFactoryReset === true;
+    }
+
+    if (isFactoryReset) {
+      // Skip seeding all other tables if database has been factory-reset to a clean default state
+      return;
     }
 
     // 2. License
@@ -1642,6 +1650,75 @@ export const dbService = {
         throw err;
       }
       handleFirestoreError(err, OperationType.WRITE, "returns");
+      throw err;
+    }
+  },
+
+  async factoryResetDatabase(currentUserId: string): Promise<void> {
+    try {
+      const collectionsToClear = [
+        "bookings",
+        "bookingItems",
+        "returns",
+        "logs",
+        "customers",
+        "items",
+        "categories",
+        "users"
+      ];
+
+      let batch = writeBatch(db);
+      let opCount = 0;
+
+      for (const colName of collectionsToClear) {
+        const snap = await getDocs(collection(db, colName));
+        for (const docSnap of snap.docs) {
+          if (colName === "users") {
+            const userData = docSnap.data();
+            // Do not delete Admin accounts (especially the current logged-in user)
+            if (docSnap.id === currentUserId || userData.role === UserRole.ADMIN) {
+              continue;
+            }
+          }
+
+          batch.delete(docSnap.ref);
+          opCount++;
+
+          if (opCount >= 400) {
+            await batch.commit();
+            batch = writeBatch(db);
+            opCount = 0;
+          }
+        }
+      }
+
+      // Update global settings to indicate factory reset is complete
+      const settingsRef = doc(db, "settings", "global");
+      const settingsSnap = await getDoc(settingsRef);
+      const currentSettings = settingsSnap.exists() ? settingsSnap.data() : DEFAULT_SETTINGS;
+      const updatedSettings = {
+        ...currentSettings,
+        isFactoryReset: true,
+        updatedAt: new Date().toISOString()
+      };
+      
+      batch.set(settingsRef, updatedSettings);
+      opCount++;
+
+      if (opCount > 0) {
+        await batch.commit();
+      }
+
+      // Log the reset operation
+      await this.logActivity(
+        currentUserId,
+        "System Admin",
+        UserRole.ADMIN,
+        "Performed complete factory default reset (all data wiped except Admin accounts)",
+        "Administration"
+      );
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, "factoryReset");
       throw err;
     }
   }

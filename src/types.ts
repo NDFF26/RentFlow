@@ -49,6 +49,7 @@ export interface CompanySettings {
   businessDescription: string;
   createdAt: string;
   updatedAt: string;
+  isFactoryReset?: boolean;
 }
 
 export enum LicenseStatus {

@@ -6,11 +6,44 @@
 
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
-import { Settings as SettingsIcon, Store, Receipt, Lock, Info } from "lucide-react";
+import { Settings as SettingsIcon, Store, Receipt, Lock, Info, Trash2, AlertTriangle, RefreshCw } from "lucide-react";
 import { BRAND_CONFIG } from "../brandConfig";
+import { dbService } from "../services/db";
+import { toast } from "react-hot-toast";
 
 export const Settings: React.FC = () => {
-  const { settings } = useApp();
+  const { settings, currentUser } = useApp();
+
+  // Reset/maintenance states
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmInput, setConfirmInput] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+
+  const handleFactoryReset = async () => {
+    if (confirmInput.toUpperCase() !== "RESET") {
+      toast.error("Please type 'RESET' exactly to confirm.");
+      return;
+    }
+
+    setIsResetting(true);
+    const loadingToast = toast.loading("Wiping database and applying factory defaults...");
+    try {
+      await dbService.factoryResetDatabase(currentUser?.id || "user-admin-01");
+      toast.success("Database fully reset to clean factory defaults!", { id: loadingToast });
+      setShowConfirm(false);
+      setConfirmInput("");
+      
+      // Force reload after a short delay so all snapshot subscriptions refresh instantly
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Reset failed.", { id: loadingToast });
+    } finally {
+      setIsResetting(false);
+    }
+  };
 
   // Settings states from BRAND_CONFIG
   const companyName = BRAND_CONFIG.companyName;
@@ -288,6 +321,73 @@ export const Settings: React.FC = () => {
             <p className="text-center text-[10px] text-slate-400 font-sans">
               To update settings, edit the <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-[9px] text-slate-600">/src/brandConfig.ts</code> file.
             </p>
+          </div>
+
+          {/* Danger Zone Factory Reset Block */}
+          <div className="bg-white p-5 rounded-xl border border-red-200 shadow-xs space-y-4">
+            <h3 className="font-display font-bold text-red-700 text-xs uppercase tracking-wider flex items-center">
+              <AlertTriangle className="w-4 h-4 text-red-500 mr-1.5" />
+              Database Maintenance
+            </h3>
+            <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
+              Perform a factory default reset to wipe all bookings, items, categories, customers, logs, and staff operators. Only admin accounts will be preserved.
+            </p>
+
+            {!showConfirm ? (
+              <button
+                type="button"
+                onClick={() => setShowConfirm(true)}
+                className="w-full py-2.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 hover:border-red-300 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Erase All Data & Reset</span>
+              </button>
+            ) : (
+              <div className="space-y-3 bg-red-50/50 p-3 rounded-lg border border-red-100 animate-slide-up">
+                <span className="text-[10px] font-bold text-red-900 block font-display">
+                  Are you absolutely sure? This is irreversible!
+                </span>
+                <p className="text-[10px] text-slate-500 leading-normal">
+                  All transactions and configurations will be permanently cleared. To confirm, type <strong className="text-red-700 font-mono">RESET</strong> below:
+                </p>
+                <input
+                  type="text"
+                  placeholder="RESET"
+                  value={confirmInput}
+                  onChange={(e) => setConfirmInput(e.target.value)}
+                  className="w-full text-center font-mono font-bold tracking-widest text-xs px-3 py-2 border border-red-200 rounded-lg bg-white text-slate-800 placeholder-slate-300 focus:outline-hidden focus:border-red-400 focus:ring-1 focus:ring-red-400"
+                />
+                <div className="flex space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowConfirm(false);
+                      setConfirmInput("");
+                    }}
+                    className="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={confirmInput !== "RESET" || isResetting}
+                    onClick={handleFactoryReset}
+                    className={`w-1/2 py-2 text-white rounded-lg text-[10px] font-bold transition-all flex items-center justify-center space-x-1 ${
+                      confirmInput === "RESET" && !isResetting
+                        ? "bg-red-600 hover:bg-red-700 shadow-xs"
+                        : "bg-slate-300 cursor-not-allowed"
+                    }`}
+                  >
+                    {isResetting ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>{isResetting ? "Resetting..." : "Wipe Now"}</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
