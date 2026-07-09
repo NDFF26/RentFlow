@@ -1,0 +1,6 @@
+{
+  "name": "RentFlow",
+  "description": "A professional cloud-based rental management system designed for businesses to manage inventory, bookings, customers, deposits, returns, invoices, and operations from a single dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

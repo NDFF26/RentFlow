@@ -1,0 +1,258 @@
+{
+  "entities": {
+    "CompanySettings": {
+      "title": "CompanySettings",
+      "description": "Company profile and branding settings",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string" },
+        "companyLogo": { "type": "string" },
+        "themeColor": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "whatsAppNumber": { "type": "string" },
+        "invoicePrefix": { "type": "string" },
+        "currency": { "type": "string" },
+        "gstEnabled": { "type": "boolean" },
+        "gstNumber": { "type": "string" },
+        "depositEnabled": { "type": "boolean" },
+        "softwareVersion": { "type": "string" },
+        "timezone": { "type": "string" },
+        "country": { "type": "string" },
+        "state": { "type": "string" },
+        "city": { "type": "string" },
+        "businessAddress": { "type": "string" },
+        "businessDescription": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["companyName", "email", "createdAt", "updatedAt"]
+    },
+    "AppUser": {
+      "title": "AppUser",
+      "description": "A staff operator profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "profileImage": { "type": "string" },
+        "status": { "type": "string" },
+        "lastLogin": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "email", "role", "status", "createdAt", "updatedAt"]
+    },
+    "License": {
+      "title": "License",
+      "description": "App license information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "licenseKey": { "type": "string" },
+        "status": { "type": "string" },
+        "activationDate": { "type": "string" },
+        "expiryDate": { "type": "string" },
+        "maximumUsers": { "type": "integer" },
+        "registeredEmail": { "type": "string" },
+        "currentVersion": { "type": "string" },
+        "lastVerification": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "licenseKey", "status", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Inventory product categories",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "categoryName": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "categoryName", "status", "createdAt", "updatedAt"]
+    },
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "An individual item in inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sku": { "type": "string" },
+        "itemName": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "categoryName": { "type": "string" },
+        "description": { "type": "string" },
+        "rentPrice": { "type": "number" },
+        "securityDeposit": { "type": "number" },
+        "quantity": { "type": "integer" },
+        "availableQuantity": { "type": "integer" },
+        "bookedQuantity": { "type": "integer" },
+        "outQuantity": { "type": "integer" },
+        "maintenanceQuantity": { "type": "integer" },
+        "lostQuantity": { "type": "integer" },
+        "imageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["id", "sku", "itemName", "categoryId", "rentPrice", "securityDeposit", "quantity", "createdAt", "updatedAt"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "A rental customer profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerName": { "type": "string" },
+        "mobileNumber": { "type": "string" },
+        "alternateMobile": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "notes": { "type": "string" },
+        "totalBookings": { "type": "integer" },
+        "currentDeposit": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["id", "customerName", "mobileNumber", "createdAt", "updatedAt"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "A rental booking transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerMobile": { "type": "string" },
+        "bookingDate": { "type": "string" },
+        "rentalStartDate": { "type": "string" },
+        "returnDate": { "type": "string" },
+        "bookingStatus": { "type": "string" },
+        "totalRent": { "type": "number" },
+        "securityDeposit": { "type": "number" },
+        "discount": { "type": "number" },
+        "advanceAmount": { "type": "number" },
+        "remainingAmount": { "type": "number" },
+        "invoiceNumber": { "type": "string" },
+        "invoiceType": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "updatedBy": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "customerId", "customerName", "bookingDate", "rentalStartDate", "returnDate", "bookingStatus", "totalRent", "securityDeposit", "createdAt", "updatedAt"]
+    },
+    "BookingItem": {
+      "title": "BookingItem",
+      "description": "Specific inventory item instances booked under a Booking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "sku": { "type": "string" },
+        "itemName": { "type": "string" },
+        "rentPrice": { "type": "number" },
+        "deposit": { "type": "number" },
+        "quantity": { "type": "integer" },
+        "totalRent": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "bookingId", "sku", "itemName", "rentPrice", "deposit", "quantity", "totalRent", "status", "createdAt"]
+    },
+    "ReturnRecord": {
+      "title": "ReturnRecord",
+      "description": "A returned rental record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "returnDate": { "type": "string" },
+        "returnedBy": { "type": "string" },
+        "damageAmount": { "type": "number" },
+        "depositRefund": { "type": "number" },
+        "remainingAmount": { "type": "number" },
+        "returnStatus": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "items": { "type": "array" }
+      },
+      "required": ["id", "bookingId", "customerId", "customerName", "returnDate", "returnedBy", "damageAmount", "depositRefund", "remainingAmount", "returnStatus", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "A security audit trail entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "role": { "type": "string" },
+        "action": { "type": "string" },
+        "module": { "type": "string" },
+        "referenceId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "device": { "type": "string" },
+        "browser": { "type": "string" }
+      },
+      "required": ["id", "userId", "userName", "role", "action", "module", "timestamp"]
+    }
+  },
+  "firestore": {
+    "settings": {
+      "schema": "CompanySettings",
+      "description": "Global company and branding profile document"
+    },
+    "license": {
+      "schema": "License",
+      "description": "Rental management license document"
+    },
+    "users": {
+      "schema": "AppUser",
+      "description": "Staff operator users"
+    },
+    "categories": {
+      "schema": "Category",
+      "description": "Product and equipment categories"
+    },
+    "items": {
+      "schema": "InventoryItem",
+      "description": "Inventory equipment and fashion items"
+    },
+    "customers": {
+      "schema": "Customer",
+      "description": "Registered customer database"
+    },
+    "bookings": {
+      "schema": "Booking",
+      "description": "Main rental bookings ledger"
+    },
+    "bookingItems": {
+      "schema": "BookingItem",
+      "description": "Line items for specific booking transactions"
+    },
+    "returns": {
+      "schema": "ReturnRecord",
+      "description": "Condition audits and deposit returns records"
+    },
+    "logs": {
+      "schema": "ActivityLog",
+      "description": "Security compliance and audit log entries"
+    }
+  }
+}

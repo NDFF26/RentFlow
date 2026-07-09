@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Enable complete read and write access for all collection paths to guarantee 100% functionality
+    match /settings/{docId} {
+      allow read, write: if true;
+    }
+
+    match /license/{docId} {
+      allow read, write: if true;
+    }
+
+    match /users/{docId} {
+      allow read, write: if true;
+    }
+
+    match /categories/{docId} {
+      allow read, write: if true;
+    }
+
+    match /items/{docId} {
+      allow read, write: if true;
+    }
+
+    match /customers/{docId} {
+      allow read, write: if true;
+    }
+
+    match /bookings/{docId} {
+      allow read, write: if true;
+    }
+
+    match /bookingItems/{docId} {
+      allow read, write: if true;
+    }
+
+    match /returns/{docId} {
+      allow read, write: if true;
+    }
+
+    match /logs/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
