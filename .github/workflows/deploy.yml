@@ -26,7 +26,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies 🔧
-          # Falls back to npm install if package-lock.json isn't perfectly synced
+        # Falls back to npm install if package-lock.json isn't perfectly synced
         run: npm ci || npm install
 
       - name: Build Application 🏗️

@@ -4,8 +4,12 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  // Automatically use repository subpath when building in GitHub Actions for GitHub Pages
+  const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+  const base = isGithubActions ? '/RentFlow/' : './';
+
   return {
-    base: "./",
+    base,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
