@@ -25,7 +25,7 @@ export interface BrandConfig {
 
 export const BRAND_CONFIG: BrandConfig = {
   companyName: "Royal Heritage Marriage Wear Rentals",
-  companyLogo: "./logo.png",
+  companyLogo: `${import.meta.env.BASE_URL || "/"}logo.png`,
   themeColor: "rose", // Premium rose/maroon elegant tone for marriage cloth rental
   phone: "+91 98765 43210",
   email: "contact@royalheritagerentals.com",
